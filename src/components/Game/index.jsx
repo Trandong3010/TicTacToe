@@ -13,6 +13,7 @@ class index extends Component {
             xIsNext: true,
             stepNumber: 0,
             size : [
+                {id: 0, name: 'default'},
                 {id: 1, name: '3 x 3'},
                 {id: 2, name: '4 x 4'},
                 {id: 3, name: '5 x 5'},
@@ -85,7 +86,7 @@ class index extends Component {
 
             return (
                 <li>
-                    <button onClick={() => this.jumpTo(value)}>{desc}</button>
+                    <button className="btn btn-primary" onClick={() => this.jumpTo(value)}>{desc}</button>
                 </li>
             );
         })
@@ -121,8 +122,8 @@ class index extends Component {
                         {dropdownItem}
                     </DropdownButton>
                 </div>
-                    <div><h3>{status}</h3></div>
-                    <ol><h3>{moves}</h3></ol>
+                    <div><h6>{status}</h6></div>
+                    <ol><p>{moves}</p></ol>
                 </div>
             </div>
         );

@@ -16,11 +16,47 @@ class index extends Component {
     //   );
     // }
     render() {
+        var size = this.props.sizeboard;
+        var classname = "";
+        if(size === 0)
+        {
+            classname = "squaresize"
+        } else if(size === 1)
+        {
+            classname = "squaresize1"
+        }else if(size === 2)
+        {
+            classname = "squaresize2"
+        }
+        else if(size === 3)
+        {
+            classname = "squaresize3"
+        }
+        else if(size === 4)
+        {
+            classname = "squaresize4"
+        }
+        else if(size === 5)
+        {
+            classname = "squaresize5"
+        }
+        else if(size === 6)
+        {
+            classname = "squaresize6"
+        }
+        else if(size === 7)
+        {
+            classname = "squaresize7"
+        }
+        else if(size === 8)
+        {
+            classname = "squaresize8"
+        }
         return (
             // <button className="square" onClick = {this.props.onClick()}>
             //     {this.props.value}
             // </button>
-            <button className="square" onClick={this.props.onClick} >
+            <button className={"square " + classname} onClick={this.props.onClick} >
             {this.props.value}
             </button>
             // <div>
