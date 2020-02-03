@@ -23,7 +23,8 @@ class index extends Component {
     
     renderSquare(i){
         return( 
-        <Square 
+        <Square
+            sizeboard = {this.props.sizeboard}
             value = {this.props.squares[i]}
             onClick={() => this.props.onClick(i)}
         />
