@@ -8,23 +8,26 @@ class index extends Component {
             value: null
         };
     }
-     Square = () => {
-      return (
-        <button className="square" onClick={this.props.onClick}>
-          {this.props.value}
-        </button>
-      );
-    }
+    //  Square = () => {
+    //   return (
+    //     <button className="square" onClick={this.props.onClick}  style={{background: '#fff', border: '1px solid #999', float: 'left', fontSize: '24px', fontWeight: 'bold', lineHeight: '34px', height: '34px', marginRight: '-1px', marginTop: '-1px', padding: '0', textAlign: 'center', width: '34px'}}>
+    //       {this.props.value}
+    //     </button>
+    //   );
+    // }
     render() {
         return (
             // <button className="square" onClick = {this.props.onClick()}>
             //     {this.props.value}
             // </button>
-            <div>
-              {this.Square()}
-            </div>
+            <button className="square" onClick={this.props.onClick} >
+            {this.props.value}
+            </button>
+            // <div>
+            //   {this.Square()}
+            // </div>
         );
     }
-}
 
+}
 export default index;

@@ -70,7 +70,7 @@ class index extends Component {
 
             return (
                 <li>
-                    <button onClick={() => this.jumpTo(value)}>{desc}</button>
+                    <button  onClick={() => this.jumpTo(value)}>{desc}</button>
                 </li>
             );
         })
