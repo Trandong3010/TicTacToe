@@ -15,6 +15,7 @@ class index extends Component {
     //     </button>
     //   );
     // }
+
     render() {
         var size = this.props.sizeboard;
         var classname = "";

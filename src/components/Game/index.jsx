@@ -1,30 +1,44 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Board from './../Board'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {select} from '../../store'
 import { Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import './style.css'
+
+const mapStateToProps = (state) => {
+    return {
+        size: state.size,
+        sizeGameBoard: state.sizeGameBoard,
+        history: state.history,
+        stepNumber: state.stepNumber
+    };
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        select: () => dispatch(select()),
+    }
+}
 class index extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            history: [{
-                squares: Array(9).fill(null),
-            }],
-            xIsNext: true,
-            stepNumber: 0,
-            size : [
-                {id: 0, name: 'default'},
-                {id: 1, name: '3 x 3'},
-                {id: 2, name: '4 x 4'},
-                {id: 3, name: '5 x 5'},
-                {id: 4, name: '6 x 6'},
-                {id: 5, name: '7 x 7'},
-                {id: 6, name: '8 x 8'},
-                {id: 7, name: '9 x 9'},
-                {id: 8, name: '10 x 10'}
-                ],
-                sizeGameBoard: 0
-        }
+    state = {
+        history: [{
+            squares: Array(9).fill(null),
+        }],
+        xIsNext: true,
+        stepNumber: 0,
+        // size: [
+        //     { id: 0, name: 'default' },
+        //     { id: 1, name: '3 x 3' },
+        //     { id: 2, name: '4 x 4' },
+        //     { id: 3, name: '5 x 5' },
+        //     { id: 4, name: '6 x 6' },
+        //     { id: 5, name: '7 x 7' },
+        //     { id: 6, name: '8 x 8' },
+        //     { id: 7, name: '9 x 9' },
+        //     { id: 8, name: '10 x 10' }
+        // ],
+        sizeGameBoard: 0
     }
 
     jumpTo(step) {
@@ -34,7 +48,7 @@ class index extends Component {
         });
     }
 
-    handleClick(i) {
+    handleClick = (i) => {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
@@ -70,12 +84,12 @@ class index extends Component {
         }
         return null;
     }
-    handlChange = (value) => {
-        this.setState({sizeGameBoard: value});
+    handlChange(value) {
+        this.setState({ sizeGameBoard: value });
     }
 
     render() {
-        const { history } = this.state;
+        const { history, sizeGameBoard } = this.state;
         const current = history[this.state.stepNumber];
         const winner = this.calculateWinner(current.squares);
 
@@ -83,7 +97,6 @@ class index extends Component {
             const desc = value ?
                 'Go to move #' + value :
                 'Go to game start';
-
             return (
                 <li>
                     <button className="btn btn-primary" onClick={() => this.jumpTo(value)}>{desc}</button>
@@ -98,30 +111,22 @@ class index extends Component {
         else {
             status = 'Next player: X' + (this.state.xIsNext ? 'X' : 'O');
         }
-
-
-        
-        var dropdownItem = this.state.size.map(p => {
-            var name = p.name;
-            return (
-            <Dropdown.Item onClick={() => this.handlChange(p.id)}>{name}</Dropdown.Item>
-            )
-        })
+        console.log(this.props);
         return (
             <div className="game">
                 <div className="game-board">
                     <Board
-                        sizeboard = {this.state.sizeGameBoard}
+                        sizeboard={this.state.sizeGameBoard}
                         squares={current.squares}
-                        onClick={(i) => this.handleClick(i)}
+                        onClick={this.handleClick}
                     />
                 </div>
                 <div className="game-info">
-                <div>
-                    <DropdownButton id="dropdown-basic-button" title="Board size:">
-                        {dropdownItem}
-                    </DropdownButton>
-                </div>
+                    <div>
+                        <DropdownButton id="dropdown-basic-button" title={this.props.size.find(x => x.id === sizeGameBoard).name}>
+                            {this.props.size.map(p => <Dropdown.Item onClick={() => this.handlChange(p.id)}>{p.name}</Dropdown.Item>)}
+                        </DropdownButton>
+                    </div>
                     <div><h6>{status}</h6></div>
                     <ol><p>{moves}</p></ol>
                 </div>
@@ -130,4 +135,4 @@ class index extends Component {
     }
 }
 
-export default index;
+export default connect(mapStateToProps, mapDispatchToProps)(index);
