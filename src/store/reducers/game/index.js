@@ -38,9 +38,9 @@ const game = (state = initialState, action) => {
             squares[action.payload] = state.xIsNext ? 'X' : 'O';
             return {
                 ...state,
-                history: history.concat([{squares: squares}]),
-                xIsNext: false,
-            stepNumber: history.length
+                history: state.history.concat([{squares: squares}]),
+                xIsNext: !state.xIsNext,
+                stepNumber: history.length
             }
         case JUMPTO:
             return {
