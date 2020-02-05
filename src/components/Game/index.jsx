@@ -2,96 +2,47 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Board from './../Board'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {select} from '../../store'
+import { HANDLECHANGESIZE, HANDLECLICKGAME, JUMPTO } from '../../store/actions'
 import { Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import {calculateWinner} from '../../common'
 import './style.css'
 
 const mapStateToProps = (state) => {
     return {
-        size: state.size,
-        sizeGameBoard: state.sizeGameBoard,
-        history: state.history,
-        stepNumber: state.stepNumber
+        data: state.gameReducer
     };
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
     return {
-        select: () => dispatch(select()),
+        handlechange: payload => dispatch({type:HANDLECHANGESIZE, payload}),
+        handleclick: payload => dispatch({type: HANDLECLICKGAME, payload}),
+        jumpto: payload => dispatch({type: JUMPTO, payload})
     }
 }
-class index extends Component {
-    state = {
-        history: [{
-            squares: Array(9).fill(null),
-        }],
-        xIsNext: true,
-        stepNumber: 0,
-        // size: [
-        //     { id: 0, name: 'default' },
-        //     { id: 1, name: '3 x 3' },
-        //     { id: 2, name: '4 x 4' },
-        //     { id: 3, name: '5 x 5' },
-        //     { id: 4, name: '6 x 6' },
-        //     { id: 5, name: '7 x 7' },
-        //     { id: 6, name: '8 x 8' },
-        //     { id: 7, name: '9 x 9' },
-        //     { id: 8, name: '10 x 10' }
-        // ],
-        sizeGameBoard: 0
-    }
 
+class index extends Component {
     jumpTo(step) {
-        this.setState({
-            stepNumber: step,
-            xIsNext: (step % 2) === 0
-        });
+        // this.setState({
+        //     stepNumber: step,
+        //     xIsNext: (step % 2) === 0
+        // });
+         this.props.jumpto(step);
     }
 
     handleClick = (i) => {
-        const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        const current = history[history.length - 1];
-        const squares = current.squares.slice();
-        if (this.calculateWinner(squares) || squares[i]) {
-            return;
-        }
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
-        this.setState({
-            history: history.concat([{
-                squares: squares,
-            }]),
-            xIsNext: !this.state.xIsNext,
-            stepNumber: history.length
-        });
-    }
-
-    calculateWinner(squares) {
-        const array = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
-        for (let i = 0; i < array.length; i++) {
-            const [a, b, c] = array[i];
-            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-                return squares[a];
-            }
-        }
-        return null;
+        this.props.handleclick(i);
     }
     handlChange(value) {
-        this.setState({ sizeGameBoard: value });
+        this.props.handlechange(value);
     }
 
     render() {
-        const { history, sizeGameBoard } = this.state;
-        const current = history[this.state.stepNumber];
-        const winner = this.calculateWinner(current.squares);
+        const { history, sizeGameBoard, stepNumber, size, xIsNext } = this.props.data;
+        // //const current = history[this.state.stepNumber];
+       // const { history, sizeGameBoard } = this.state;
+        const current = history[stepNumber];
+        const winner = calculateWinner(current.squares);
 
         const moves = history.map((index, value) => {
             const desc = value ?
@@ -109,22 +60,20 @@ class index extends Component {
             status = 'Winner: ' + winner;
         }
         else {
-            status = 'Next player: X' + (this.state.xIsNext ? 'X' : 'O');
+            status = 'Next player: X' + (xIsNext ? 'X' : 'O');
         }
-        console.log(this.props);
         return (
             <div className="game">
                 <div className="game-board">
                     <Board
-                        sizeboard={this.state.sizeGameBoard}
                         squares={current.squares}
                         onClick={this.handleClick}
                     />
                 </div>
                 <div className="game-info">
                     <div>
-                        <DropdownButton id="dropdown-basic-button" title={this.props.size.find(x => x.id === sizeGameBoard).name}>
-                            {this.props.size.map(p => <Dropdown.Item onClick={() => this.handlChange(p.id)}>{p.name}</Dropdown.Item>)}
+                        <DropdownButton id="dropdown-basic-button" title={size.find(x => x.id === sizeGameBoard).name}>
+                            {size.map(p => <Dropdown.Item onClick={() => this.handlChange(p.id)}>{p.name}</Dropdown.Item>)}
                         </DropdownButton>
                     </div>
                     <div><h6>{status}</h6></div>
